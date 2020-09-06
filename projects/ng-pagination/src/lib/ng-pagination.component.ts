@@ -8,70 +8,33 @@ import { Page } from './models/pagination-model';
 
   <div *ngIf="!!page" class="d-flex align-items-center justify-content-center">
 
+    <span (click)="prevPage()" class="d-flex align-items-center mr-2">
+      <nb-icon class="pager-cursor" [class.disabled]="page?.current_page == 1" size="small" [status]="'basic'"
+        icon="arrow-ios-back-outline">
+      </nb-icon>
+    </span>
+
+    <nb-icon *ngIf="showPreviousSlot" class="mx-1" icon="more-horizontal-outline" status="dark"
+    style="cursor: pointer;"></nb-icon>
+
     <span (click)="customPageChanger(pageNumber)" *ngFor="let pageNumber of pageNumberList"
         [ngClass]="{'selectedPage': (pageNumber == selectedPage) }" class="mx-1 pageSpan">
         {{ pageNumber}}
     </span>
 
+    <nb-icon *ngIf="showNextSlot" class="mx-1" icon="more-horizontal-outline" status="dark"
+    style="cursor: pointer;"></nb-icon>
+
+    <span (click)="nextPage()" class="d-flex align-items-center ml-2">
+      <nb-icon class="pager-cursor" [class.disabled]="page?.current_page == page?.last_page" size="small"
+        [status]="'basic'" icon="arrow-ios-forward-outline">
+      </nb-icon>
+    </span>
+
 </div>
 
   `,
-  styles: [`
-    :host {
-
-      .d-flex {
-        display: flex;
-      }
-
-      .align-items-center {
-        align-items: center;
-      }
-
-      .justify-content-center {
-        justify-content: center;
-      }
-
-      .mr-2 {
-        margin-right: 1rem;
-      }
-
-      .ml-2 {
-        margin-right: 1rem;
-      }
-
-      .mx-1 {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-      }
-
-      .cursor-pointer {
-        cursor: pointer;
-      }
-
-      .pageSpan {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 3rem;
-          height: 2.5rem;
-          cursor: pointer;
-          border-radius: 0.35714286rem;
-      }
-
-      .selectedPage {
-          background-color: #626bb;
-          color: white;
-      }
-
-      .pager-cursor {
-          cursor: pointer !important;
-
-          &.disabled {
-              cursor: auto !important;
-          }
-      }
-    }
-  `]
+  styleUrls: ['./ng-pagination.component.scss']
 })
 export class NgPaginationComponent implements OnChanges {
 
