@@ -15,14 +15,14 @@ import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
       <fa-icon class="pager-cursor" [class.disabled]="page?.current_page == 1" [icon]="faLeft"></fa-icon>
     </span>
 
-    <fa-icon *ngIf="showPreviousSlot" class="mx-1 cursor-pointer" [icon]="faEllipsis"></fa-icon>
+    <fa-icon *ngIf="showPreviousSlot" class="mx-1 cursor-pointer ellipsis" [icon]="faEllipsis"></fa-icon>
 
     <span (click)="customPageChanger(pageNumber)" *ngFor="let pageNumber of pageNumberList"
         [ngClass]="{'selectedPage': (pageNumber == selectedPage) }" class="mx-1 pageSpan">
         {{ pageNumber}}
     </span>
 
-    <fa-icon *ngIf="showNextSlot" class="mx-1 cursor-pointer" [icon]="faEllipsis"></fa-icon>
+    <fa-icon *ngIf="showNextSlot" class="mx-1 cursor-pointer ellipsis" [icon]="faEllipsis"></fa-icon>
 
     <span (click)="nextPage()" class="d-flex align-items-center ml-2">
       <fa-icon class="pager-cursor" [class.disabled]="page?.current_page == page?.last_page" [icon]="faRight">
@@ -61,19 +61,21 @@ export class NgPaginationComponent implements OnChanges {
 
   ngOnChanges(change: SimpleChanges) {
     if (!!this.page) {
+      this.selectedPage = this.page.current_page;
       this.setPageList();
     }
   }
 
   setPageList() {
     this.pageNumberList = [];
-    // Since, we have fixed the number of pages to be shown first to as 4
+    // Since, we have fixed the number of pages to be shown first upto the endPage
     if (this.page.last_page <= this.endPage) {
       let start = this.startPage;
       while (start <= this.page.last_page) {
         this.pageNumberList.push(start);
         start++;
       }
+      this.showNextSlot = false;
     } else {
       let start = this.startPage;
       while (start <= this.endPage) {
@@ -84,7 +86,6 @@ export class NgPaginationComponent implements OnChanges {
         this.showNextSlot = true;
       }
     }
-    this.selectedPage = this.page.current_page;
   }
 
   // Method on clicking on page
@@ -105,10 +106,18 @@ export class NgPaginationComponent implements OnChanges {
         if (this.page.current_page < this.startPage) {
           this.startPage = this.startPage - 1;
           this.endPage = this.endPage - 1;
+          if (this.startPage <= 1) {
+            this.startPage = 1;
+            this.showPreviousSlot = false;
+          }
+          // shifting valus
+          for (let i = this.pageNumberList.length - 1; i > 0; i--) {
+            this.pageNumberList[i] = this.pageNumberList[i - 1];
+          }
+          this.pageNumberList[0] = this.startPage;
         }
-        if (this.startPage <= 1) {
-          this.startPage = 1;
-          this.showPreviousSlot = false;
+        if (this.page.last_page > this.endPage) {
+          this.showNextSlot = true;
         }
         this.loadNewPage();
       }
@@ -128,6 +137,9 @@ export class NgPaginationComponent implements OnChanges {
             this.endPage = this.page.last_page;
             this.showNextSlot = false;
           }
+          // Updating the page number list
+          this.pageNumberList.splice(0, 1);
+          this.pageNumberList.push(this.endPage);
           this.showPreviousSlot = true;
         }
         this.loadNewPage();
