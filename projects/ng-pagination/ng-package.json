@@ -2,6 +2,11 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ng-pagination",
   "lib": {
-    "entryFile": "src/public-api.ts"
+    "entryFile": "src/public-api.ts",
+    "externals": {
+      "@fortawesome/angular-fontawesome": "angular-fontawesome",
+      "@fortawesome/fontawesome-svg-core": "fontawesome-svg",
+      "@fortawesome/free-solid-svg-icons": "fontawesome-solid"
+    }
   }
 }

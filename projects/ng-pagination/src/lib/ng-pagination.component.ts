@@ -1,5 +1,8 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { Page } from './models/pagination-model';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -9,26 +12,21 @@ import { Page } from './models/pagination-model';
   <div *ngIf="!!page" class="d-flex align-items-center justify-content-center">
 
     <span (click)="prevPage()" class="d-flex align-items-center mr-2">
-      <nb-icon class="pager-cursor" [class.disabled]="page?.current_page == 1" size="small" [status]="'basic'"
-        icon="arrow-ios-back-outline">
-      </nb-icon>
+      <fa-icon class="pager-cursor" [class.disabled]="page?.current_page == 1" [icon]="faLeft"></fa-icon>
     </span>
 
-    <nb-icon *ngIf="showPreviousSlot" class="mx-1" icon="more-horizontal-outline" status="dark"
-    style="cursor: pointer;"></nb-icon>
+    <fa-icon *ngIf="showPreviousSlot" class="mx-1 cursor-pointer" [icon]="faEllipsis"></fa-icon>
 
     <span (click)="customPageChanger(pageNumber)" *ngFor="let pageNumber of pageNumberList"
         [ngClass]="{'selectedPage': (pageNumber == selectedPage) }" class="mx-1 pageSpan">
         {{ pageNumber}}
     </span>
 
-    <nb-icon *ngIf="showNextSlot" class="mx-1" icon="more-horizontal-outline" status="dark"
-    style="cursor: pointer;"></nb-icon>
+    <fa-icon *ngIf="showNextSlot" class="mx-1 cursor-pointer" [icon]="faEllipsis"></fa-icon>
 
     <span (click)="nextPage()" class="d-flex align-items-center ml-2">
-      <nb-icon class="pager-cursor" [class.disabled]="page?.current_page == page?.last_page" size="small"
-        [status]="'basic'" icon="arrow-ios-forward-outline">
-      </nb-icon>
+      <fa-icon class="pager-cursor" [class.disabled]="page?.current_page == page?.last_page" [icon]="faRight">
+      </fa-icon>
     </span>
 
 </div>
@@ -57,6 +55,9 @@ export class NgPaginationComponent implements OnChanges {
   showNextSlot = false;
 
   @Output() pageChangeEvent = new EventEmitter<any>();
+  faLeft = faChevronLeft;
+  faRight = faChevronRight;
+  faEllipsis = faEllipsisH;
 
   ngOnChanges(change: SimpleChanges) {
     if (!!this.page) {
